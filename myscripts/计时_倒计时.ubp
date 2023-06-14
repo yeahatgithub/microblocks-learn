@@ -1,0 +1,37 @@
+module main
+author unknown
+version 1 0 
+description ''
+variables mytimer msec sec min 
+
+script 85 56 {
+whenStarted
+resetTimer
+forever {
+  msec = ((timer) % 1000)
+  sec = (((timer) / 1000) % 60)
+  min = ((timer) / 60000)
+  sayIt ('[data:join]' min ':' sec ':' msec)
+}
+}
+
+script 92 344 {
+whenStarted
+comment '倒计时...'
+mytimer = (1 * 60000)
+forever {
+  local 'r_msec' (mytimer - (timer))
+  local 'cd_msec' (r_msec % 1000)
+  local 'cd_sec' ((r_msec / 1000) % 60)
+  local 'cd_min' (r_msec / 60000)
+  sayIt ('[data:join]' cd_min ':' cd_sec ':' cd_msec)
+}
+}
+
+script 80 686 {
+whenCondition (mytimer <= (timer))
+stopAll
+sayIt ('[data:join]' '到点了' '!' mytimer ':' (timer))
+stopTask
+}
+
